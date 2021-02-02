@@ -5,20 +5,24 @@ const PAGE_ACCESS_TOKEN = 'EAACBbDxFYzgBAHs0k1PRRGLOGbXiz3s5ilgiCoNVnj6kE5gb3ulk
 var http = require('http');
 var bodyParser = require('body-parser');
 var express = require('express');
+var logger = require('morgan');
+var request = require("request");
+var router = express();
 
 var app = express();
+app.use(logger('dev'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 var server = http.createServer(app);
-var request = require("request");
 
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
 });
 
 app.get('/webhook', function(req, res) { // Đây là path để validate tooken bên app facebook gửi qua
-  console.log(req.query['hub.verify_token'], req);
+  console.log(req);
   if (req.query['hub.verify_token'] === VALIDATION_TOKEN) {
     res.send(req.query['hub.challenge']);
   }
